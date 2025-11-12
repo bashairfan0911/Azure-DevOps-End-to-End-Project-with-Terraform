@@ -1,8 +1,9 @@
 #!/bin/bash
 
+# TODO: CHANGE THESE VALUES BEFORE RUNNING - Replace "piyush" with your name/identifier
 RESOURCE_GROUP_NAME=terraform-state-rg
-STAGE_SA_ACCOUNT=tfstagebackend2024piyush
-DEV_SA_ACCOUNT=tfdevbackend2024piyush
+STAGE_SA_ACCOUNT=tfstagebackend2024piyush              # TODO: Change storage account name (must be globally unique, 3-24 chars, lowercase)
+DEV_SA_ACCOUNT=tfdevbackend2024piyush                  # TODO: Change storage account name (must be globally unique, 3-24 chars, lowercase)
 CONTAINER_NAME=tfstate
 
 

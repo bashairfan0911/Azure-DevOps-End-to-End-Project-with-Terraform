@@ -6,10 +6,14 @@ trigger:
     - feature/*
   paths:
     include:
-    - terraform/*
+    - dev/*              # TODO: Triggers on dev environment changes
+    - staging/*          # TODO: Triggers on staging environment changes
+    - modules/*          # TODO: Triggers on module changes
+    - provider.tf        # TODO: Triggers on provider changes
+    - output.tf          # TODO: Triggers on output changes
 
 variables:
-  - group: terraform-secrets
+  - group: terraform-secrets                           # TODO: Create this variable group in Azure DevOps
 
 stages:
 - stage: Validate
@@ -26,10 +30,10 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/dev'
-        backendServiceArm: 'Azure-Service-Connection'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/dev'  # TODO: Path to dev environment
+        backendServiceArm: 'Azure-Service-Connection'      # TODO: Create Azure Service Connection in Azure DevOps
         backendAzureRmResourceGroupName: 'terraform-state-rg'
-        backendAzureRmStorageAccountName: 'tfstatedev2024'
+        backendAzureRmStorageAccountName: 'tfstatedev2024'  # TODO: Change to match your storage account name
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'dev.terraform.tfstate'
     
@@ -37,7 +41,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/dev'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
 
 - stage: Dev_Deploy
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -58,14 +62,14 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/dev'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
               environmentServiceNameAzureRM: 'Azure-Service-Connection'
 
-- stage: Test_Deploy
+- stage: Staging_Deploy
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
-  - deployment: terraform_apply_test
-    environment: test
+  - deployment: terraform_apply_staging
+    environment: staging
     pool:
       vmImage: 'ubuntu-latest'
     strategy:
@@ -80,5 +84,5 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/test'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/staging'  # Changed from test to staging
               environmentServiceNameAzureRM: 'Azure-Service-Connection'

@@ -8,7 +8,7 @@ variable "service_principal_name" {
 }
 
 variable "ssh_public_key" {
-  default = ".ssh/id_rsa.pub"
+  default = ".ssh/id_rsa.pub"                          # TODO: Ensure SSH key exists at this path or change path
 }
 
 variable "client_id" {}

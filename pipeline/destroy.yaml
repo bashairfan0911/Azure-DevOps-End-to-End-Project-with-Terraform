@@ -10,7 +10,7 @@ parameters:
   default: dev
 
 variables:
-  - group: terraform-secrets
+  - group: terraform-secrets                           # TODO: Create this variable group in Azure DevOps
   - name: TERRAFORM_VERSION
     value: '1.5.7'
 
@@ -29,8 +29,8 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}'
-        environmentServiceNameAzureRM: 'Azure-Service-Connection'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.environment }}'
+        environmentServiceNameAzureRM: 'Azure-Service-Connection'  # TODO: Create Azure Service Connection in Azure DevOps
         commandOptions: '-destroy'
         publishPlanResults: 'tfdestroy'
 
@@ -54,5 +54,5 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'destroy'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.environment }}'
               environmentServiceNameAzureRM: 'Azure-Service-Connection'
